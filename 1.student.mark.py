@@ -100,7 +100,7 @@ courseInfo()
 print("")
 
 while True:
-    print("Select an option: ")
+    print("Pick an option: ")
     print("1. Input marks for a course")
     print("2. Display all course")
     print("3. Display mark list")
@@ -118,7 +118,7 @@ while True:
         break
     else:
         print("")
-        print("YOU'RE GAYYYYYYYYY!")
+        print("Invalid selection!")
 
 
 
