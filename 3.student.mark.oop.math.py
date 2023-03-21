@@ -9,13 +9,13 @@ class Student:
         self.__name = name
         self.__dob = dob
 
-    def getStudentID(self):
+    def get_student_id(self):
         return self.__studentID
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getDob(self):
+    def get_dob(self):
         return self.__dob
 
 # Class Course - private
@@ -25,23 +25,23 @@ class Course:
         self.__name = name
         self.__credits = credits
 
-    def getCourseID(self):
+    def get_course_id(self):
         return self.__courseID
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getCredits(self):
+    def get_credits(self):
         return self.__credits
 
 # Class Major
 class Major:
     def __init__(self):
         # Dictionaries that contain all the information about students, courses, marks and GPAs
-        self.__studentDict = {}
-        self.__courseDict = {}
-        self.__markDict = {}
-        self.__gpaDict = {}
+        self.__student_dict = {}
+        self.__course_dict = {}
+        self.__mark_dict = {}
+        self.__gpa_dict = {}
 
         # Object variables that keep track of what line they're in
         self.row1 = 12
@@ -49,25 +49,25 @@ class Major:
         self.row3 = 12
 
         # Object variables that check whether students, courses, mark are already in the table or not
-        self.lastStudentID = []
-        self.lastCourseID = []
-        self.lastMark = []
+        self.last_student_id = []
+        self.last_course_id = []
+        self.last_mark = []
 
         # Create options for functions
         self.menu = ['Add Students', 'Add Courses', 'Add Marks', 'Display Marks', 'Calculate GPA', 'Sort GPA', 'Exit']
         self.screen = curses.initscr()
 
-    def getStudentDict(self):
-        return self.__studentDict
+    def get_student_dict(self):
+        return self.__student_dict
 
-    def getCourseDict(self):
-        return self.__courseDict
+    def get_course_dict(self):
+        return self.__course_dict
 
-    def getMarkDict(self):
-        return self.__markDict
+    def get_mark_dict(self):
+        return self.__mark_dict
 
-    def getGpaDict(self):
-        return self.__gpaDict
+    def get_gpa_dict(self):
+        return self.__gpa_dict
 
     # Initialize the table
     def draw_table(self):
@@ -97,8 +97,8 @@ class Major:
         for i in range(23, 29):
             self.screen.addstr(i, 0, "                               │                                                                                        ")
 
-    # Print and control the options for functions by using arrow key to change options
-    def print_func(self, selected_row_idx):
+    # Print the options for functions
+    def print_opts(self, selected_row_idx):
         for idx, row in enumerate(self.menu):
             x = 0
             y = 23 + idx
@@ -112,7 +112,7 @@ class Major:
         self.screen.refresh()
 
     # Get user's input for student information (studentNum should be <= 8)
-    def studentInfo(self, studentNum=2):
+    def get_student_info(self, studentNum=2):
         curses.curs_set(0)
         self.screen.keypad(True)
         curses.echo()
@@ -134,21 +134,21 @@ class Major:
                 user_input = self.screen.getstr(row, col).decode()
                 a.append(user_input)
 
-            self.__studentDict[a[0]] = Student(a[0], a[1], a[2])
+            self.__student_dict[a[0]] = Student(a[0], a[1], a[2])
             a = []
 
-        for studentID in self.__studentDict:
-            if studentID not in self.lastStudentID and len(self.lastStudentID) <= 8:
-                self.screen.addstr(self.row1, pos[0], f"{self.__studentDict[studentID].getStudentID()}")
-                self.screen.addstr(self.row1, pos[1], f"{self.__studentDict[studentID].getName()}")
-                self.screen.addstr(self.row1, pos[2], f"{self.__studentDict[studentID].getDob()}")
+        for studentID in self.__student_dict:
+            if studentID not in self.last_student_id and len(self.last_student_id) <= 8:
+                self.screen.addstr(self.row1, pos[0], f"{self.__student_dict[studentID].get_student_id()}")
+                self.screen.addstr(self.row1, pos[1], f"{self.__student_dict[studentID].get_name()}")
+                self.screen.addstr(self.row1, pos[2], f"{self.__student_dict[studentID].get_dob()}")
                 self.row1 += 1
-                self.lastStudentID.append(studentID)
+                self.last_student_id.append(studentID)
 
         curses.noecho()
 
     # Get user's input for course information (courseNum should be <= 8)
-    def courseInfo(self, courseNum=2):
+    def get_course_info(self, courseNum=2):
         curses.curs_set(0)
         self.screen.keypad(True)
         curses.echo()
@@ -167,21 +167,21 @@ class Major:
                 user_input = self.screen.getstr(row, col).decode("utf-8")
                 a.append(user_input)
 
-            self.__courseDict[a[0]] = Course(a[0], a[1], int(a[2]))
+            self.__course_dict[a[0]] = Course(a[0], a[1], int(a[2]))
             a = []
 
-        for courseID in self.__courseDict:
-            if courseID not in self.lastCourseID and len(self.lastCourseID) <= 8:
-                self.screen.addstr(self.row2, 0, f"{self.__courseDict[courseID].getCourseID()} - "
-                                                 f"{self.__courseDict[courseID].getName()} - "
-                                                 f"{self.__courseDict[courseID].getCredits()}")
+        for courseID in self.__course_dict:
+            if courseID not in self.last_course_id and len(self.last_course_id) <= 8:
+                self.screen.addstr(self.row2, 0, f"{self.__course_dict[courseID].get_course_id()} - "
+                                                 f"{self.__course_dict[courseID].get_name()} - "
+                                                 f"{self.__course_dict[courseID].get_credits()}")
                 self.row2 += 1
-                self.lastCourseID.append(courseID)
+                self.last_course_id.append(courseID)
 
         curses.noecho()
 
     # Get user's input for mark of a specific course using courseID
-    def markInfo(self):
+    def get_mark_info(self):
         curses.curs_set(0)
         self.screen.keypad(True)
         curses.echo()
@@ -195,16 +195,16 @@ class Major:
         self.screen.addstr(23, 33, ">> Enter the courseID: ")
         row, col = self.screen.getyx()
         courseID = self.screen.getstr(row, col).decode("utf-8")
-        if courseID not in self.__courseDict:
+        if courseID not in self.__course_dict:
             self.screen.addstr(23, 33, "                                                            ")
             self.screen.addstr(23, 33, ">> Invalid courseID!")
             return
 
         a = []
-        for studentID in self.__studentDict:
+        for studentID in self.__student_dict:
             for j in commands:
                 self.screen.addstr(23, 33, "                                                            ")
-                self.screen.addstr(23, 33, f"{j}{self.__studentDict[studentID].getName()}: ")
+                self.screen.addstr(23, 33, f"{j}{self.__student_dict[studentID].get_name()}: ")
                 row, col = self.screen.getyx()
                 user_input = self.screen.getstr(row, col).decode("utf-8")
 
@@ -213,17 +213,17 @@ class Major:
             # Calculate total mark
             a.append(math.floor(float(a[0] * 0.1 + a[1] * 0.4 + a[2] * 0.5) * 10) / 10)
 
-            if studentID not in self.__markDict:
-                self.__markDict[studentID] = {}
+            if studentID not in self.__mark_dict:
+                self.__mark_dict[studentID] = {}
 
             # Using numpy to create array which contains attendance, midterm, final and total mark, respectively
-            self.__markDict[studentID][courseID] = np.array([a[0], a[1], a[2], a[3]])
+            self.__mark_dict[studentID][courseID] = np.array([a[0], a[1], a[2], a[3]])
             a = []
 
         curses.noecho()
 
     # Display Mark
-    def displayMark(self):
+    def display_mark(self):
         curses.curs_set(0)
         self.screen.keypad(True)
         curses.echo()
@@ -233,14 +233,14 @@ class Major:
         self.screen.addstr(23, 33, ">> Enter the courseID: ")
         row, col = self.screen.getyx()
         courseID = self.screen.getstr(row, col).decode("utf-8")
-        if courseID not in self.__courseDict:
+        if courseID not in self.__course_dict:
             self.screen.addstr(23, 33, "                                                            ")
             self.screen.addstr(23, 33, ">> Invalid courseID!")
             return
 
-        for studentID in self.__studentDict:
-            if studentID in self.__markDict and courseID in self.__markDict[studentID]:
-                mark = self.__markDict[studentID][courseID]
+        for studentID in self.__student_dict:
+            if studentID in self.__mark_dict and courseID in self.__mark_dict[studentID]:
+                mark = self.__mark_dict[studentID][courseID]
                 self.screen.addstr(self.row3, 89, "                               ")
                 list(map(lambda col, element: self.screen.addstr(self.row3, 89 + 7 * col, str(element)), range(len(mark)), mark))
 
@@ -250,8 +250,10 @@ class Major:
             self.row3 += 1
         self.row3 = 12
 
+        curses.noecho()
+
     # Calculate GPA for a specific student
-    def calculateGPA(self):
+    def calculate_gpa(self):
         curses.curs_set(0)
         self.screen.keypad(True)
         curses.echo()
@@ -265,37 +267,39 @@ class Major:
         # Calculate GPA
         average = 0
         total_credits = 0
-        if studentID in self.__markDict:
-            for courseID in self.__markDict[studentID]:
-                average += (self.__markDict[studentID][courseID][3] * self.__courseDict[courseID].getCredits())
-                total_credits += self.__courseDict[courseID].getCredits()
-            self.__gpaDict[studentID] = math.floor((average / total_credits) * 10) / 10
+        if studentID in self.__mark_dict:
+            for courseID in self.__mark_dict[studentID]:
+                average += (self.__mark_dict[studentID][courseID][3] * self.__course_dict[courseID].get_credits())
+                total_credits += self.__course_dict[courseID].get_credits()
+            self.__gpa_dict[studentID] = math.floor((average / total_credits) * 10) / 10
             self.screen.addstr(23, 33, "                                                            ")
-            self.screen.addstr(23, 33, f"Successfully calculate GPA for {self.__studentDict[studentID].getName()}!")
-        elif studentID in self.__studentDict and studentID not in self.__markDict:
+            self.screen.addstr(23, 33, f"Successfully calculate GPA for {self.__student_dict[studentID].get_name()}!")
+        elif studentID in self.__student_dict and studentID not in self.__mark_dict:
             self.screen.addstr(23, 33, "                                                            ")
-            self.screen.addstr(23, 33, f">> {self.__studentDict[studentID].getName()} doesn't have any marks yet!")
+            self.screen.addstr(23, 33, f">> {self.__student_dict[studentID].get_name()} doesn't have any marks yet!")
         else:
             self.screen.addstr(23, 33, "                                                            ")
             self.screen.addstr(23, 33, ">> Invalid studentID!")
 
+        curses.noecho()
+
     # Sort GPA
-    def sortGPA(self):
-        if not self.__gpaDict:
+    def sort_gpa(self):
+        if not self.__gpa_dict:
             self.screen.addstr(23, 33, "                                                            ")
             self.screen.addstr(23, 33, "There's not any GPAs yet!")
         else:
-            sorted_GPA = sorted(self.__gpaDict.items(), key=lambda x: x[1], reverse=True)
-            self.screen.addstr(23, 33, "                                                            ")
+            sorted_GPA = sorted(self.__gpa_dict.items(), key=lambda x: x[1], reverse=True)
             for idx, dict in enumerate(sorted_GPA):
-                self.screen.addstr(23 + idx, 33, f"#{idx + 1} {self.__studentDict[dict[0]].getName()}: {dict[1]}")
+                self.screen.addstr(23, 33, f"#{idx + 1} {self.__student_dict[dict[0]].get_name()}: {dict[1]}")
 
-    def run_func(self):
+    # Control the options for functions by using arrow key to change options and "enter" key to choose functions
+    def run_opts(self):
         curses.curs_set(0)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
         current_row_idx = 0
-        self.print_func(current_row_idx)
+        self.print_opts(current_row_idx)
 
         while True:
             key = self.screen.getch()
@@ -309,17 +313,17 @@ class Major:
                 self.screen.addstr(1, 4, "You pressed {}".format(self.menu[current_row_idx]))
 
                 if self.menu[current_row_idx] == "Add Students":
-                    self.studentInfo()
+                    self.get_student_info()
                 elif self.menu[current_row_idx] == "Add Courses":
-                    self.courseInfo()
+                    self.get_course_info()
                 elif self.menu[current_row_idx] == "Add Marks":
-                    self.markInfo()
+                    self.get_mark_info()
                 elif self.menu[current_row_idx] == "Display Marks":
-                    self.displayMark()
+                    self.display_mark()
                 elif self.menu[current_row_idx] == "Calculate GPA":
-                    self.calculateGPA()
+                    self.calculate_gpa()
                 elif self.menu[current_row_idx] == "Sort GPA":
-                    self.sortGPA()
+                    self.sort_gpa()
 
                 self.screen.refresh()
                 self.screen.getch()
@@ -328,7 +332,7 @@ class Major:
                     break
 
             self.screen.addstr(1, 4, "                                        ")
-            self.print_func(current_row_idx)
+            self.print_opts(current_row_idx)
 
     def main_func(self):
         curses.curs_set(0)
@@ -339,7 +343,7 @@ class Major:
 
         self.draw_table()
 
-        self.run_func()
+        self.run_opts()
 
         self.screen.getch()
 
@@ -351,4 +355,3 @@ def main(stdscr):
 
 curses.wrapper(main)
 
-# your code goes here
