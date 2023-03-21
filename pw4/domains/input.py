@@ -3,71 +3,73 @@ import math
 import numpy as np
 
 
+# Class Student
 class Student:
     def __init__(self, studentID, name, dob):
         self.__studentID = studentID
         self.__name = name
         self.__dob = dob
 
-    def getStudentID(self):
+    def get_student_id(self):
         return self.__studentID
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getDob(self):
+    def get_dob(self):
         return self.__dob
 
 
+# Class Course
 class Course:
     def __init__(self, courseID, name, credits):
         self.__courseID = courseID
         self.__name = name
         self.__credits = credits
 
-    def getCourseID(self):
+    def get_course_id(self):
         return self.__courseID
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getCredits(self):
+    def get_credits(self):
         return self.__credits
 
-
+# Class Input
 class Input:
     def __init__(self):
-        self.__studentDict = {}
-        self.__courseDict = {}
-        self.__markDict = {}
-        self.__gpaDict = {}
-        self.menu = ['Add Students', 'Add Courses', 'Add Marks', 'Display Marks', 'Calculate GPA', 'Sort GPA',
-                     'Exit']
+        # Dictionaries that contain all the information about students, courses, marks and GPAs
+        self.__student_dict = {}
+        self.__course_dict = {}
+        self.__mark_dict = {}
+        self.__gpa_dict = {}
+
         self.screen = curses.initscr()
 
-    def getStudentDict(self):
-        return self.__studentDict
+    def get_student_dict(self):
+        return self.__student_dict
 
-    def getCourseDict(self):
-        return self.__courseDict
+    def get_course_dict(self):
+        return self.__course_dict
 
-    def getMarkDict(self):
-        return self.__markDict
+    def get_mark_dict(self):
+        return self.__mark_dict
 
-    def getGpaDict(self):
-        return self.__gpaDict
+    def get_gpa_dict(self):
+        return self.__gpa_dict
 
-    def studentInfo(self, studentNum=2):
+    # Get user's input for student information (studentNum should be <= 8)
+    def get_student_info(self, studentNum=2):
         curses.curs_set(0)
-
         self.screen.keypad(True)
         curses.echo()
 
-        pos = [32, 41, 78]
         commands = [">> Enter studentID (E.g: BIxx-xxx or BAxx-xxx): ",
                     ">> Enter student name: ",
-                    ">> Enter student dob: "]
+                    ">> Enter student dob (E.g: xx/xx/xxx): "]
 
+        # Get the position right next to the text in "commands" to type from keyboard
         a = []
         for i in range(studentNum):
             for j in commands:
@@ -78,12 +80,14 @@ class Input:
                 user_input = self.screen.getstr(row, col).decode()
                 a.append(user_input)
 
-            self.__studentDict[a[0]] = Student(a[0], a[1], a[2])
+            self.__student_dict[a[0]] = Student(a[0], a[1], a[2])
             a = []
 
-    def courseInfo(self, courseNum=2):
-        curses.curs_set(0)
+        curses.noecho()
 
+    # Get user's input for course information (courseNum should be <= 8)
+    def get_course_info(self, courseNum=2):
+        curses.curs_set(0)
         self.screen.keypad(True)
         curses.echo()
 
@@ -91,6 +95,7 @@ class Input:
                     ">> Enter course name: ",
                     ">> Enter the credits of the course: "]
 
+        # Get the position right next to the text in "commands" to type from keyboard
         a = []
         for i in range(courseNum):
             for j in commands:
@@ -101,12 +106,14 @@ class Input:
                 user_input = self.screen.getstr(row, col).decode("utf-8")
                 a.append(user_input)
 
-            self.__courseDict[a[0]] = Course(a[0], a[1], int(a[2]))
+            self.__course_dict[a[0]] = Course(a[0], a[1], int(a[2]))
             a = []
 
-    def markInfo(self):
-        curses.curs_set(0)
+        curses.noecho()
 
+    # Get user's input for mark of a specific course using courseID
+    def get_mark_info(self):
+        curses.curs_set(0)
         self.screen.keypad(True)
         curses.echo()
 
@@ -114,31 +121,35 @@ class Input:
                     ">> Enter the midterm mark for ",
                     ">> Enter the final mark for "]
 
+        # Get user's input for courseID and check if it's in courseDict
         self.screen.addstr(23, 33, "                                                            ")
         self.screen.addstr(23, 33, ">> Enter the courseID: ")
         row, col = self.screen.getyx()
 
         courseID = self.screen.getstr(row, col).decode("utf-8")
-        if courseID not in self.__courseDict:
+        if courseID not in self.__course_dict:
             self.screen.addstr(23, 33, "                                                            ")
             self.screen.addstr(23, 33, ">> Invalid courseID!")
             return
 
         a = []
-        for studentID in self.__studentDict:
+        for studentID in self.__student_dict:
             for j in commands:
                 self.screen.addstr(23, 33, "                                                            ")
-                self.screen.addstr(23, 33, f"{j}{self.__studentDict[studentID].getName()}: ")
+                self.screen.addstr(23, 33, f"{j}{self.__student_dict[studentID].get_name()}: ")
                 row, col = self.screen.getyx()
-
                 user_input = self.screen.getstr(row, col).decode("utf-8")
+
+                # Using math.floor to round down to 1 decimal: math.floor(num * 10) / 10
                 a.append(math.floor(float(user_input) * 10) / 10)
+            # Calculate total mark
             a.append(math.floor(float(a[0] * 0.1 + a[1] * 0.4 + a[2] * 0.5) * 10) / 10)
 
-            if studentID not in self.__markDict:
-                self.__markDict[studentID] = {}
-            self.__markDict[studentID][courseID] = np.array([a[0], a[1], a[2], a[3]])
+            if studentID not in self.__mark_dict:
+                self.__mark_dict[studentID] = {}
+
+            # Using numpy to create array which contains attendance, midterm, final and total mark, respectively
+            self.__mark_dict[studentID][courseID] = np.array([a[0], a[1], a[2], a[3]])
             a = []
 
         curses.noecho()
-
